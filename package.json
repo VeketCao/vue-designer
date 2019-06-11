@@ -1,0 +1,24 @@
+{
+  "name": "vue-designer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VeketCao/vue-designer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VeketCao/vue-designer/issues"
+  },
+  "homepage": "https://github.com/VeketCao/vue-designer#readme",
+  "dependencies": {
+    "jqueryui": "^1.11.1",
+    "vue-grid-layout": "^2.3.4"
+  }
+}

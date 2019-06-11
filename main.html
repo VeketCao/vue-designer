@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue组件页面设计器</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/jquery/jquery-ui.min.js"></script>
+    <script src="lib/underscore/underscore-min.js"></script>
+    <script src="lib/vue/dist/vue.min.js"></script>
+    <!--<script src="lib/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="lib/element-ui/lib/theme-default/index.css">-->
+    <script src="lib/vue-grid-layout/vue-grid-layout.umd.min.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/main.js"></script>
+
+</head>
+<body>
+<header class="header">
+    <span class="title">Vue组件页面设计器</span>
+    <div class="pull-right tool-btn">
+        <a class="btn btn-blue" id="preview_btn">预览</a>
+        <a class="btn btn-white" id="save_btn">保存</a>
+    </div>
+</header>
+
+<section class="section">
+    <div class="left-nav pull-left">
+        <ul class="nav-list">
+            <li class="nav-header"><span>vue组件</span></li>
+            <li class="list-item" id="component-def-list">
+               <!-- <div class="widget-item component_js ui-draggable" type="def" title="拖拽至页面中间区域" component="MipHello"> <span>MipHello</span> </div>
+                <div class="widget-item component_js ui-draggable" type="def" title="拖拽至页面中间区域" component="MipTest"> <span>MipTest</span> </div>-->
+            </li>
+        </ul>
+    </div>
+    <div class="wd-container">
+        <div id="widget-control" class="widget-control ui-sortable">
+            <grid-layout :layout="layout"
+                         :col-num="48"
+                         :row-height="10"
+                         :is-draggable="draggable"
+                         :is-resizable="resizable"
+                         :vertical-compact="true"
+                         :use-css-transforms="true"
+            >
+                <grid-item v-for="item in layout"
+                           :x="item.x"
+                           :y="item.y"
+                           :w="item.w"
+                           :h="item.h"
+                           :i="item.i"
+                >
+                    <component :is="item.name" ></component>
+                    <i class="i-delete" @click="delHandle(item)"></i>
+                </grid-item>
+            </grid-layout>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

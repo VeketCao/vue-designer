@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>预览</title>
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/underscore/underscore-min.js"></script>
+    <script src="lib/vue/dist/vue.min.js"></script>
+    <script src="lib/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="lib/element-ui/lib/theme-default/index.css">
+    <script src="lib/vue-grid-layout/vue-grid-layout.min.js"></script>
+    <script src="js/util.js"></script>
+    <script>
+        var _pageCfg = {};
+
+        var initPage  =function () {
+            console.log(_pageCfg);
+            Vue.config.debug = true;
+            Vue.config.devtools = true;
+            var GridLayout = VueGridLayout.GridLayout;
+            var GridItem = VueGridLayout.GridItem;
+            var components_keys=['GridLayout','GridItem'];
+            var components_values=[GridLayout,GridItem];
+            _.each(_pageCfg.items,function (it) {
+                components_keys.push(it.name);
+                components_values.push(eval(it.name));
+            });
+            new Vue({
+                el: '#app',
+                components: _.object(components_keys,components_values),
+                data: {
+                    layout: _pageCfg.items,
+                    draggable: false,
+                    resizable: false
+                }
+            });
+        };
+
+        /**加载组件**/
+        var loadInitComponents = function (cb) {
+            AppUtil.http('http://mipdev.midea.com:82/components/components.json').done(function (rtn) {
+                if(!_.isEmpty(rtn)){
+                    AppUtil.loadVueComponents(_.pluck(rtn, 'url'), cb);
+                }
+            });
+        };
+
+        var startHandle = function () {
+            var page_cfg = localStorage.getItem('pagecfg');
+            if(_.isEmpty(page_cfg)) return;
+            _pageCfg = JSON.parse(page_cfg);
+            //加载组件
+            loadInitComponents(initPage);
+        }
+    </script>
+</head>
+<body onload="startHandle()">
+
+<div id="app">
+    <grid-layout :layout="layout"
+                 :col-num="48"
+                 :row-height="10"
+                 :is-draggable="draggable"
+                 :is-resizable="resizable"
+                 :vertical-compact="true"
+                 :use-css-transforms="true"
+    >
+        <grid-item v-for="item in layout"
+                   :x="item.x"
+                   :y="item.y"
+                   :w="item.w"
+                   :h="item.h"
+                   :i="item.i"
+        >
+            <component :is="item.name" ></component>
+        </grid-item>
+    </grid-layout>
+</div>
+</body>
+</html>
