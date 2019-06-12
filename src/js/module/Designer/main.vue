@@ -18,10 +18,15 @@
                              :draggable="allowDrag"
                              @dragstart="leftDragStart"
                              @dragend="leftDragEnd"
-                             component="MipHello">
-                            <span>MipHello</span>
+                             component="Hello">
+                            <span>Hello</span>
                         </div>
-                        <div class="widget-item component_js ui-draggable" type="def" title="拖拽至页面中间区域" component="MipTest"> <span>MipTest</span> </div>
+                        <div class="widget-item component_js ui-draggable"
+                             type="def"
+                             title="拖拽至页面中间区域"
+                             component="Test">
+                            <span>Test</span>
+                        </div>
                     </li>
                 </ul>
             </div>
