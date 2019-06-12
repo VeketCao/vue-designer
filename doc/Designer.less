@@ -1,0 +1,275 @@
+@import "../../../../../styles/vars";
+
+.main-container {
+  height: ~'calc(100vh - @{form-designer-header-height})';
+  flex-wrap: nowrap !important;
+}
+
+.inner-container {
+  height: 100%;
+  padding: 20px 10px;
+  overflow: auto;
+}
+
+.control-panel {
+  background: #efefef;
+}
+
+.middle {
+  padding-top: 20px;
+  position: relative;
+  .form-title {
+    margin: -20px -10px 0;
+    min-height: 55px;
+    background: #fbfbfb;
+    text-align: center;
+    padding: 5px;
+    h3{
+      line-height: 30px;
+      font-size: 18px;
+    }
+    p{
+      line-height: 20px;
+    }
+  }
+  .form-desc{
+    font-size:15px;
+    text-align: center;
+    background: #fbfbfb;
+    border-bottom: 1px dashed #ddd;
+  }
+  .empty-info {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 20%;
+    color: #999;
+  }
+}
+
+.middle .m-form .m-form-item-label {
+  position: relative;
+}
+.middle .m-form-item-required .m-form-item-label:after {
+  position: absolute;
+  top: 10px;
+  right: 2px;
+}
+
+.editor-reset {
+  line-height: 1;
+}
+
+.handler {
+  z-index: 1;
+  position: absolute;
+  border: none;
+  color: @color-danger;
+  opacity: 0;
+  transition: opacity .3s;
+  &.drag-over {
+    opacity: 1;
+  }
+  &.top, &.bottom {
+    height: 40px;
+  }
+  &.left, &.right {
+    width: 40px;
+  }
+  &.top {
+    border-top: 3px solid currentcolor;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  &.bottom {
+    border-bottom: 3px solid currentcolor;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  &.left {
+    left: 0;
+    top: 0;
+    height: 100%;
+    border-left: 3px solid currentcolor;
+  }
+  &.right {
+    right: -6.5px;
+    top: 0;
+    height: 100%;
+    border-right: 3px solid currentcolor;
+  }
+}
+
+.forms-container {
+  padding: 5px;
+  box-sizing: border-box;
+  min-height: 100%;
+  .handler {
+    pointer-events: none;
+  }
+  &.active .handler {
+    pointer-events: auto;
+  }
+}
+
+.types {
+  background: #efefef;
+  h2.form-title {
+    font-size: 16px;
+    line-height: 1.2;
+    margin-bottom: 15px;
+  }
+  h3 {
+    border-left: 2px solid currentcolor;
+    padding-left: 5px;
+    line-height: 1;
+    & + ul {
+      margin-top: 10px;
+    }
+  }
+  ul {
+    overflow: hidden;
+    & + h3 {
+      margin-top: 20px;
+    }
+  }
+  li {
+    width: 50%;
+    float: left;
+    box-sizing: border-box;
+    padding-bottom: 5px;
+    &:nth-child(odd) {
+      padding-right: 3px;
+    }
+    &:nth-child(even) {
+      padding-left: 3px;
+    }
+    & > a {
+      text-align: center;
+      background: white;
+      border: 1px solid #ddd;
+      line-height: 40px;
+      font-size: 13px;
+      color: #999;
+      display: block;
+      opacity: 1;
+      transition: opacity .3s;
+    }
+    &.moving > a {
+      opacity: .5;
+    }
+  }
+}
+
+.row-container {
+  outline: 1px dashed #ddd;
+  background: #fbfbfb;
+  position: relative;
+  padding: 5px 5px 5px 30px;
+  &.moving {
+    z-index: 1;
+    opacity: .5;
+    outline: @color-danger solid 1px;
+  }
+  .row-move-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    cursor: move;
+  }
+  .item-container {
+    position: relative;
+    box-sizing: border-box;
+    background: white;
+    transition: background .3s, outline .3s;
+    outline: 1px dashed #ddd;
+    padding: 3px;
+    margin: 5px;
+    .item-description{
+      white-space: pre-line;
+      color: #ababab;
+      &.important {
+        color: red;
+      }
+    }
+    &.active {
+      outline: @color-success solid 1px;
+      background: rgba(19, 206, 102, .1);
+    }
+    .item-icon {
+      color: red;
+      position: absolute;
+      top: 50%;
+      left: 8px;
+      font-size: 1.3rem;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+    .custom-render {
+      border: 1px solid #ddd;
+      color: #adadad;
+      padding: 10px 0;
+      background: #efefef;
+      text-align: center;
+    }
+    .error-icon {
+      color: red;
+    }
+    .hide-icon {
+      color: #a2a2a2;
+    }
+    &.moving {
+      z-index: 1;
+      opacity: .5;
+      outline: @color-primary solid 1px;
+    }
+  }
+}
+
+// 动态效果
+.forms-container.drag-enter {
+  outline: 3px dotted @color-primary;
+}
+
+.delete-handler {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: @color-warning;
+  color: white;
+  transform: translateX(-100%);
+  transition: all .3s;
+  & > * {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+  &.active {
+    transform: translateX(0);
+  }
+  &.drag-over {
+    background: @color-danger;
+  }
+}
+
+.control-panel {
+  .m-steps .m-steps-head {
+    background: #efefef;
+  }
+  .m-steps .m-steps-title {
+    background: #efefef;
+  }
+  .m-steps-item.m-steps-status-process .m-steps-tail > i {
+    background-color: #b6babf;
+  }
+}

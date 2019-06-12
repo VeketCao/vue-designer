@@ -1,0 +1,162 @@
+<div class="container">
+  <div v-if="!item">
+    <p class="empty-text">{{$t('itemProperty.emptyInfo')}}</p>
+  </div>
+  <div v-else>
+    <h3 class="property-title">{{$t('itemProperty.headerTitle')}}</h3>
+    <m-form
+      :key="temKey"
+      :model="item"
+      ref="propertyForm"
+      label-position="top">
+      <m-form-item
+        :label="$t('itemProperty.title')"
+        :prop="'title.'+lang"
+        :rules="[{required: true, message: $t('itemProperty.titleRequired')}]">
+        <vue-dynamic-loader
+          :url="$asyncComponent('multiLangEditor')"
+          :supportLang="supportLang"
+          :value="item.title"
+          v-model="item.title">
+        </vue-dynamic-loader>
+      </m-form-item>
+      <subform
+        v-if="item.type === 'subform'"
+        :item="item">
+      </subform>
+      <values-source-switch
+        v-if="config.optionsBuilder.indexOf(item.type) >= 0"
+        :item="item">
+      </values-source-switch>
+      <reference-file
+        v-else-if="item.type === 'file'"
+        :langType="$lang"
+        :instanceId="xFormConfigure.fdRelId"
+        moduleName="MFORM-FORM"
+        :item="item">
+      </reference-file>
+      <link-property
+        v-else-if="item.type === 'link'"
+        :item="item">
+      </link-property>
+      <rich-text-property
+        v-else-if="item.type === 'richText'"
+        :item="item">
+      </rich-text-property>
+      <widget-button-property
+        v-else-if="item.type === 'widgetButton'"
+        :item="item">
+      </widget-button-property>
+      <description-input-property
+        v-else-if="item.type === 'desc'"
+        :item="item">
+      </description-input-property>
+      <required-property
+        v-if="config.noRequiedType.indexOf(item.type)===-1"
+        :item="item">
+      </required-property>
+      <input class="advanced-filter" type="checkbox" :id="'advanced'+item.id">
+      <m-form-item>
+        <label
+          class="m-btn m-btn-primary m-btn-small"
+          :for="'advanced'+item.id">
+          <Icon type="arrow-down-b"></Icon>
+          {{$t('itemProperty.advanceMode')}}
+        </label>
+      </m-form-item>
+      <template v-if="config.noDescType.indexOf(item.type)===-1">
+        <m-form-item
+          :label="$t('itemProperty.description')">
+          <vue-dynamic-loader
+            :url="$asyncComponent('multiLangEditor')"
+            :supportLang="supportLang"
+            :value="item.description"
+            v-model="item.description">
+          </vue-dynamic-loader>
+        </m-form-item>
+        <m-form-item
+          :label="$t('itemProperty.descriptionImportant')">
+          <m-radio-group
+            v-model="item.options.description.important">
+            <m-radio :label="true">
+              {{$t('common.yes')}}
+            </m-radio>
+            <m-radio :label="false">
+              {{$t('common.no')}}
+            </m-radio>
+          </m-radio-group>
+        </m-form-item>
+      </template>
+      <field-property
+        v-if="config.noFieldsType.indexOf(item.type) === -1"
+        :item="item"
+        :items="items"
+        :currentLang="lang"
+        :disabledFieldValues="disabledFieldValues"
+        @fieldsChanges="xUpdateFields($event)"
+        :sourceFields="fields">
+      </field-property>
+      <text-property
+        v-if="item.type==='text'"
+        :item="item">
+      </text-property>
+      <radio-property
+        v-else-if="item.type === 'radio'"
+        :item="item">
+      </radio-property>
+      <checkbox-property
+        v-else-if="item.type === 'checkbox'"
+        :item="item">
+      </checkbox-property>
+      <select-property
+        v-else-if="item.type === 'select'"
+        :item="item">
+      </select-property>
+      <date-picker-property
+        v-else-if="['dateRangePicker', 'datePicker'].indexOf(item.type) !== -1"
+        :item="item">
+      </date-picker-property>
+      <number-property
+        v-else-if="item.type==='number'"
+        :item="item">
+      </number-property>
+      <person-selector-property
+        v-else-if="item.type==='personSelector'"
+        :item="item">
+      </person-selector-property>
+      <divider-property
+        v-else-if="item.type === 'divider'"
+        :item="item">
+      </divider-property>
+      <upload-file
+        v-if="item.type === 'upload'"
+        :item="item">
+      </upload-file>
+      <show-hide
+        v-if="config.noShowHideType.indexOf(item.type)===-1"
+        :item="item">
+      </show-hide>
+      <data-service
+        v-if="config.canDataServiceType.indexOf(item.type)!==-1"
+        :mainTable="true"
+        :item="item">
+      </data-service>
+      <layout-property
+        v-if="config.noLayout.indexOf(item.type)==-1"
+        :item="item">
+      </layout-property>
+      <render-config
+        :item="item">
+      </render-config>
+      <subform-other-config
+        v-if="item.type === 'subform'"
+        :item="item">
+      </subform-other-config>
+    </m-form>
+  </div>
+  <select-model
+    v-model="showDataModel"
+    :fdAppId="xFormConfigure.rowRender"
+    @handleChoose="handleChoose">
+  </select-model>
+</div>

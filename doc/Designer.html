@@ -1,0 +1,382 @@
+<div>
+  <m-row class="main-container" type="flex">
+    <m-col span="5">
+      <div class="inner-container types" v-if="formTypes">
+        <h3>{{$t('common.basicComponents')}}</h3>
+        <ul>
+          <m-row type="flex" :gutter="5">
+            <m-col span="12" v-for="(x, index) in formTypes.basic">
+              <text-block
+                class="type-item"
+                :draggable="allowTypeDrag && allowDrag"
+                :handleDragStart="typeDragStart"
+                :handleDragEnd="typeDragEnd"
+                :dragType="x.type"
+                :icon="x.icon"
+                :msg="x.title">
+              </text-block>
+            </m-col>
+          </m-row>
+        </ul>
+        <h3>
+          {{$t('common.advancedComponents')}}
+        </h3>
+        <ul>
+          <m-row type="flex" :gutter="5">
+            <m-col span="12" v-for="(x, index) in formTypes.advanced">
+              <text-block
+                class="type-item"
+                :draggable="allowTypeDrag && allowDrag"
+                :handleDragStart="typeDragStart"
+                :handleDragEnd="typeDragEnd"
+                :dragType="x.type"
+                :icon="x.icon"
+                :msg="x.title">
+              </text-block>
+            </m-col>
+          </m-row>
+        </ul>
+      </div>
+      <div
+        class="delete-handler"
+        ref="deletePanel"
+        @dragenter="deletePanelDragEnter($event)"
+        @dragleave="deletePanelDragLeave($event)"
+        @dragover.prevent="deletePanelDragOver($event)"
+        @drop.prevent="deletePanelDrop">
+        <Icon :size="80" :type="deleteIcon"/>
+      </div>
+    </m-col>
+    <m-col span="14">
+      <div class="inner-container middle">
+        <div class="form-title">
+          <h3>{{formTitle}}</h3>
+          <p>{{formDesc}}</p>
+        </div>
+        <div
+          v-if="formData.items.length === 0" class="empty-info">
+          <h3>{{$t('designer.emptyMessage')}}</h3>
+        </div>
+        <div
+          class="forms-container"
+          ref="formsContainer"
+          @dragenter="formsContainerDragEnter($event)"
+          @dragleave="formsContainerDragLeave($event)"
+          @dragover.prevent="formsContainerDragOver($event)"
+          @drop.prevent="formsContainerDrop">
+          <m-form
+            @submit.native.prevent
+            ref="formData"
+            :label-width="formConfig.labelWidth"
+            :label-position="formConfig.labelPosition"
+            :model="formData">
+            <div
+              v-for="rowIndex in maxRowNumber"
+              :draggable="allowDrag"
+              @dragstart="formRowDragStart($event ,rowIndex)"
+              @dragend="formRowDragEnd($event)"
+              class="row-container">
+              <Icon class="base-icon row-move-icon"
+                    :type="rowIndex > formData.row ? 'eye-disabled' : 'drag'"></Icon>
+              <hr
+                v-for="h in handlers.row"
+                v-if="ifRowHandlerShowLogic(rowIndex, h)"
+                @dragover.prevent
+                @drop="rowHandlerDrop($event, rowIndex, h)"
+                @dragleave="rowHandlerDragLeave($event)"
+                @dragenter="rowHandlerDragEnter($event, rowIndex, h)"
+                @dragover="rowHandlerDragOver($event, rowIndex, h)"
+                :class="'handler row-handler '+h">
+              <m-row>
+                <m-col
+                  v-for="(item, index) in formData.items"
+                  v-if="item.layout.row === rowIndex"
+                  :span="item.layout.span"
+                  :offset="item.layout.offset">
+                  <div
+                    class="item-container"
+                    :class="{'active': item.id === activeItemId}"
+                    :draggable="allowDrag"
+                    @click="setActiveItemId(item.id)"
+                    @dragstart="formItemDragStart($event ,item.id)"
+                    @dragend="formItemDragEnd($event)">
+                    <Icon
+                      v-if="!item.metaData.validate"
+                      class="item-icon error-icon"
+                      type="alert-circled">
+                    </Icon>
+                    <Icon
+                      v-if="item.hide && item.metaData.validate"
+                      class="item-icon hide-icon"
+                      type="eye-disabled">
+                    </Icon>
+                    <hr
+                      v-for="h in handlers.item"
+                      v-if="ifItemHandlerShowLogic(item.id, h)"
+                      @dragover.prevent
+                      @drop="itemHandlerDrop($event, item.id, h)"
+                      @dragenter="itemHandlerDragEnter($event)"
+                      @dragleave="itemHandlerDragLeave($event)"
+                      @dragover="itemHandlerDragOver($event, item.id, h)"
+                      :class="'handler item-handler '+h">
+                    <m-form-item
+                      :label="item.options.render.hideTitleText ? '' : item.title[lang]"
+                      :showLabel="item.options.render.showTitle"
+                      :required="item.validators.required.required">
+                      <div v-if="item.options.render.custom && item.options.render.url"
+                        class="custom-render">
+                        <Icon type="settings" size="50" />
+                        <p>{{item.options.render.url}}</p>
+                      </div>
+                      <div
+                        v-else-if="item.type === 'text'"
+                        @mouseover="enableDrag"
+                        @mouseout="disableDrag">
+                        <m-input
+                          v-model="item.value"
+                          @on-change="updateItemValue(item.id, $event.target.value)"
+                          :type="item.options.rows===1?'text':'textarea'"
+                          :rows="item.options.rows"
+                          :disabled="item.disabled">
+                        </m-input>
+                      </div>
+                      <div
+                        v-else-if="item.type === 'number'"
+                        @mouseover="enableDrag"
+                        @mouseout="disableDrag">
+                        <m-input-number
+                          v-model="item.value"
+                          :max="item.options.max === null ? Infinity : item.options.max"
+                          :min="item.options.min === null ? -Infinity : item.options.min"
+                          :step="item.options.step"
+                          :editable="item.options.editable"
+                          :precision="item.options.precision"
+                          :disabled="item.disabled">
+                        </m-input-number>
+                      </div>
+                      <m-radio-group
+                        v-else-if="item.type === 'radio'"
+                        can-cancel
+                        v-model="item.value"
+                        @on-change="updateItemValue(item.id, item.value)"
+                        :vertical="item.options.vertical">
+                        <template v-if="getOptionsValuesWithGroup(item.options).group">
+                          <template v-for="(val, key) in getOptionsValuesWithGroup(item.options).data">
+                            <h5 class="group-title">{{key}}</h5>
+                            <m-radio v-for="c in val"
+                                     :key="c.value"
+                                     :disabled="c.disabled"
+                                     :label="c.value">
+                              <span>{{c.label[lang]}}</span>
+                            </m-radio>
+                          </template>
+                        </template>
+                        <template v-else>
+                          <m-radio v-for="c in getOptionsValuesWithGroup(item.options).data"
+                                   :key="c.value"
+                                   :disabled="c.disabled"
+                                   :label="c.value">
+                            <span>{{c.label[lang]}}</span>
+                          </m-radio>
+                        </template>
+                      </m-radio-group>
+                      <m-checkbox-group
+                        v-else-if="item.type === 'checkbox'"
+                        :disabled="item.disabled"
+                        v-model="item.value"
+                        :vertical="item.options.vertical"
+                        @on-change="updateItemValue(item.id, item.value)">
+
+                        <template v-if="getOptionsValuesWithGroup(item.options).group">
+                          <template v-for="(val, key) in getOptionsValuesWithGroup(item.options).data">
+                            <h5 class="group-title">{{key}}</h5>
+                            <m-checkbox v-for="c in val"
+                                        :key="c.value"
+                                        :disabled="c.disabled"
+                                        :label="c.value">
+                              {{c.label[lang]}}
+                            </m-checkbox>
+                          </template>
+                        </template>
+                        <template v-else>
+                          <m-checkbox v-for="c in getOptionsValuesWithGroup(item.options).data"
+                                      :key="c.value"
+                                      :disabled="c.disabled"
+                                      :label="c.value">
+                            {{c.label[lang]}}
+                          </m-checkbox>
+                        </template>
+                      </m-checkbox-group>
+                      <template
+                        v-else-if="item.type ==='datePicker'">
+                        <m-time-picker
+                          transfer
+                          timeStamp
+                          v-if="item.options.type=='time'"
+                          :key="lang"
+                          :type="item.options.type"
+                          v-model="item.value"
+                          :disabled="item.disabled"
+                          :format="item.options.format"
+                          :start-date="calcStartDate(item.options)"
+                          :show-week-numbers="true"
+                          :options="dateOptions(item.options)">
+                        </m-time-picker>
+                        <m-date-picker
+                          v-else
+                          transfer
+                          timeStamp
+                          :key="item.options.type + lang"
+                          :type="item.options.type"
+                          v-model="item.value"
+                          :disabled="item.disabled"
+                          :format="item.options.format"
+                          :start-date="calcStartDate(item.options)"
+                          :show-week-numbers="true"
+                          :options="dateOptions(item.options)">
+                        </m-date-picker>
+                      </template>
+                      <template
+                        v-else-if="item.type ==='dateRangePicker'">
+                        <m-time-picker
+                          v-if="item.options.type === 'timerange'"
+                          transfer
+                          timeStamp
+                          :type="item.options.type"
+                          v-model="item.value"
+                          :options="dateOptions(item.options)"
+                          :start-date="calcStartDate(item.options)"
+                          :disabled="item.disabled">
+                        </m-time-picker>
+                        <m-date-picker
+                          v-else
+                          transfer
+                          timeStamp
+                          :key="item.options.type"
+                          :type="item.options.type"
+                          v-model="item.value"
+                          :options="dateOptions(item.options)"
+                          :start-date="calcStartDate(item.options)"
+                          :disabled="item.disabled">
+                        </m-date-picker>
+                      </template>
+                      <Select
+                        v-else-if="item.type === 'select'"
+                        :key="selectKey"
+                        :multiple="item.options.multiple"
+                        :disabled="item.disabled || getOptionsValues(item.options).length === 0"
+                        @on-change="updateItemValue(item.id, item.value);selectKey++"
+                        :clearable="true"
+                        v-model="item.value">
+                        <template v-if="getOptionsValuesWithGroup(item.options).group">
+                          <OptionGroup v-for="(val, key) in getOptionsValuesWithGroup(item.options).data"
+                                       :label="key">
+                            <Option v-for="opt in val"
+                                    :value="opt.value"
+                                    :label="opt.label[lang]"
+                                    :key="opt.value">
+                              {{ opt.label[lang] }}
+                            </Option>
+                          </OptionGroup>
+                        </template>
+                        <Option v-else
+                                v-for="c in getOptionsValuesWithGroup(item.options).data"
+                                :value="c.value"
+                                :disabled="c.disabled"
+                                :label="c.label[lang]"
+                                :key="c.value">
+                          {{c.label[lang]}}
+                        </Option>
+                      </Select>
+                      <vue-dynamic-loader
+                        v-else-if="item.type ==='desc'"
+                        :url="$asyncComponent('uEditor')"
+                        :editDisabled="true"
+                        :previewBorder="true"
+                        :langType="lang"
+                        :value="item.value[lang]">
+                      </vue-dynamic-loader>
+                      <vue-dynamic-loader
+                        v-else-if="item.type ==='richText'"
+                        :url="$asyncComponent('uEditor')"
+                        :editDisabled="true"
+                        :previewBorder="true"
+                        :previewHeight="[36, 300]"
+                        :langType="lang"
+                        :value="item.value">
+                      </vue-dynamic-loader>
+                      <staff-selector
+                        v-else-if="item.type ==='personSelector'"
+                        :vueInstance="Vue"
+                        v-model="item.value"
+                        :fs-placeholder="item.description[lang]"
+                        :ban-edit="item.disabled"
+                        :ud-type="item.options.udType"
+                        :single="item.options.single"
+                        :only-fsearch="item.options.onlyFsearch"
+                        :no-fast-bar="item.options.noFastBar"
+                        :ban-del-list="item.options.banDelList"
+                        :currentUser="currentUser"
+                        :autoFillCurrentUser="false"
+                        loginId
+                        :c-lang="lang"
+                        project-name="/mip"
+                        @change="personChange"
+                        :resources="{id:item.id}">
+                      </staff-selector>
+                      <vue-dynamic-loader
+                        v-else-if="item.type ==='subform'"
+                        :url="$asyncComponent('subFormTable')"
+                        :vueInstance="Vue"
+                        @on-change="updateItemValue($event.id, $event)"
+                        :lang="lang"
+                        :item="calcItem(item)"
+                        :items="formData.items">
+                      </vue-dynamic-loader>
+                      <uploadFile
+                        v-else-if="item.type ==='file' || item.type ==='upload'"
+                        :onlyFileList="item.type ==='file'"
+                        banEdit
+                        :componentType="item.type ==='upload' ? 'referenceFile' : ''"
+                        :langType="lang"
+                        :instanceId="fdRelId"
+                        :item="item">
+                      </uploadFile>
+                      <m-divider
+                        v-else-if="item.type==='divider'"
+                        :color="item.options.lineColor"
+                        :type="item.options.lineType"
+                        :width="item.options.lineWidth"/>
+                      <m-text-link
+                        v-else-if="item.type==='link'"
+                        :hyperLink="item.value"
+                        :text="item.title[lang]"/>
+                      <vue-dynamic-loader
+                        v-else-if="item.type ==='widgetButton'"
+                        :url="$asyncComponent('widgetButton')"
+                        :style="{'text-align':item.options.align}"
+                        :title="item.title[lang]">
+                      </vue-dynamic-loader>
+                      <div class="item-description"
+                         :class="{important: item.options.description.important}"
+                         v-if="item.description[lang]"
+                         v-html="item.description[lang]">
+                      </div>
+                    </m-form-item>
+                  </div>
+                </m-col>
+              </m-row>
+            </div>
+          </m-form>
+        </div>
+      </div>
+    </m-col>
+    <m-col span="5">
+      <div class="inner-container control-panel">
+        <item-property
+          :key="activeItemId">
+        </item-property>
+      </div>
+    </m-col>
+  </m-row>
+</div>
