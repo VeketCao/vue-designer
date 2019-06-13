@@ -66,7 +66,7 @@
     }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 
     .main-container{
         height: 100%;

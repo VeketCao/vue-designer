@@ -8,7 +8,7 @@
     }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     body {
         margin: 0px;
         padding: 0px;

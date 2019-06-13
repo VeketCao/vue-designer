@@ -1,0 +1,10 @@
+node_modules
+build
+zip
+assets
+dist
+.idea
+npm-debug.log
+.vscode
+stats.json
+yarn.lock
