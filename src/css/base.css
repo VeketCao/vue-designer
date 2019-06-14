@@ -21,6 +21,10 @@ body, body * {
     outline: none;
 }
 
+/***自定义样式***/
+.pull-right {
+    float: right;
+}
 
 /*vue-grid-layout*/
 .vue-grid-layout {

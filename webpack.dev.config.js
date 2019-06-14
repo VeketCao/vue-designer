@@ -115,13 +115,8 @@ module.exports = (() => {
                                 fallback:'vue-style-loader',
                                 publicPath: '../'
                             })),
-                            scss:['css-hot-loader'].concat(ExtractTextPlugin.extract({
-                                use:['css-loader','postcss-loader','sass-loader'],
-                                fallback:'vue-style-loader',
-                                publicPath: '../'
-                            })),
-                            sass:['css-hot-loader'].concat(ExtractTextPlugin.extract({
-                                use:['css-loader','postcss-loader','sass-loader'],
+                            less:['css-hot-loader'].concat(ExtractTextPlugin.extract({
+                                use:['css-loader','postcss-loader','less-loader'],
                                 fallback:'vue-style-loader',
                                 publicPath: '../'
                             })),

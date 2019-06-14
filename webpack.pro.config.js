@@ -91,10 +91,7 @@ module.exports = (() => {
                 allChunks: false
             }),
             new OptimizeCSSPlugin({
-                cssProcessorOptions: { safe: true, map: { inline: false } }
-            }),
-            new OptimizeCSSPlugin({
-                cssProcessorOptions: { safe: true, map: { inline: false } }
+                cssProcessorOptions: { safe: true, map: false }
             }),
             new webpack.ProvidePlugin({'_': "underscore",'Vue':'vue','AppUtil':'apputil',}),
             new CleanWebpackPlugin(['dist'])
@@ -111,13 +108,8 @@ module.exports = (() => {
                                 fallback:'vue-style-loader',
                                 publicPath: '../'
                             }),
-                            scss:ExtractTextPlugin.extract({
-                                use:['css-loader','postcss-loader','sass-loader'],
-                                fallback:'vue-style-loader',
-                                publicPath: '../'
-                            }),
-                            sass:ExtractTextPlugin.extract({
-                                use:['css-loader','postcss-loader','sass-loader'],
+                            less:ExtractTextPlugin.extract({
+                                use:['css-loader','postcss-loader','less-loader'],
                                 fallback:'vue-style-loader',
                                 publicPath: '../'
                             }),
