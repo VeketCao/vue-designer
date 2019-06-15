@@ -1,5 +1,5 @@
 import ColumnPanel from './ColumnPanel/main'
 import TextInput from './TextInput/main'
 
-Vue.component('column-panel',ColumnPanel);
-Vue.component('text-input',TextInput);
+Vue.component('ColumnPanel',ColumnPanel);
+Vue.component('TextInput',TextInput);

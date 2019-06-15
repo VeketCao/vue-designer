@@ -23,7 +23,7 @@
         data(){
             return{
                 pageConfig:{
-                    list:[],
+                    items:[],
                     opts:{//页面可配置属性
                         title:''
                     }

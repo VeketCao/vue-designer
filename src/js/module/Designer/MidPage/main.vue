@@ -2,12 +2,14 @@
     <div class="mid-page-container">
         <div class="page">
             <draggable class="page-list"
+                       v-model="data.items"
                        v-bind="{group:'g', ghostClass: 'ghost'}"
                        @end="handleMoveEnd"
                        @add="handleWidgetAdd"
+
             >
-                <template v-for="(it,index) in data.list">
-                    <pageItem v-if="it" :key="index" :element="it" :select.sync="curSelect"></pageItem>
+                <template v-for="(it,index) in data.items">
+                    <pageItem v-if="it" :key="it.key" :element="it" :select.sync="curSelect"></pageItem>
                 </template>
             </draggable>
         </div>
@@ -30,12 +32,15 @@
             handleMoveEnd({newIndex, oldIndex}){
                 console.log('index', newIndex, oldIndex)
             },
-            handleWidgetAdd(evt){
+            handleWidgetAdd(evt){//添加实例化后id
                 console.log('add', evt)
-                console.log('end', evt)
                 const newIndex = evt.newIndex
-                const to = evt.to
-                console.log(to)
+                const key = AppUtil.getUUID();
+                this.$set(this.data.items,newIndex,{
+                    ...this.data.items[newIndex],
+                    key,
+                })
+                console.log(this.data)
             }
         },
         components:{

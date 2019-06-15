@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span>这是单文本行组件</span>
+        <span>这是实例化后单文本行组件</span>
     </div>
 </template>
 

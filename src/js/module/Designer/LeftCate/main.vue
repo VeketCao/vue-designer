@@ -3,6 +3,7 @@
         <div class="cate-list">
             <div class="title">基础组件</div>
             <draggable tag='ul'
+                       :list="basicComponents"
                        v-bind="{group:{ name:'g', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
                        @start="handledragStart"
                        @end="handledragEnd"

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span>这是布局组件</span>
+        <span>这是实例化后布局组件</span>
     </div>
 </template>
 
