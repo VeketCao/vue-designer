@@ -67,7 +67,7 @@ module.exports = (() => {
             filename:'js/[hash:8].[name].min.js',
             chunkFilename:'js/[hash:8].[id].min.js'
         },
-        devtool: '#source-map',
+        /*devtool: '#source-map',*/
         plugins:[
             new webpack.optimize.ModuleConcatenationPlugin(),
             new webpack.DefinePlugin({
@@ -83,7 +83,7 @@ module.exports = (() => {
                     compress:{warnings: false,},
                     mangle: { except: ['$super','Vue', '$', 'exports', 'require']},
                 },
-                sourceMap: true,
+                sourceMap: false,
                 parallel: true
             }),
             new ExtractTextPlugin({
