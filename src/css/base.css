@@ -26,6 +26,22 @@ body, body * {
     float: right;
 }
 
+*, :after, :before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mid-page-container .ghost{
+    list-style: none;
+    font-size: 0;
+    display: block;
+    position: relative;
+    border: 2px solid red;
+    width: 100%;
+}
+
+
 /*vue-grid-layout*/
 .vue-grid-layout {
     background: #eee;

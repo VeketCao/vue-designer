@@ -104,7 +104,6 @@
                     span{
                         display: inline-block;
                         vertical-align: middle;
-                        margin-left: 7px;
                     }
                 }
 

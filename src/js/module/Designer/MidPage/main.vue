@@ -4,6 +4,7 @@
             <draggable class="page-list"
                        v-model="data.items"
                        v-bind="{group:'g', ghostClass: 'ghost'}"
+                       @start="handleMoveStart"
                        @end="handleMoveEnd"
                        @add="handleWidgetAdd"
 
@@ -29,12 +30,15 @@
             }
         },
         methods:{
+            handleMoveStart(e){
+                console.log('start',e)
+            },
             handleMoveEnd({newIndex, oldIndex}){
                 console.log('index', newIndex, oldIndex)
             },
-            handleWidgetAdd(evt){//添加实例化后id
-                console.log('add', evt)
-                const newIndex = evt.newIndex
+            handleWidgetAdd(e){//添加实例化后id
+                console.log('add', e)
+                const newIndex = e.newIndex
                 const key = AppUtil.getUUID();
                 this.$set(this.data.items,newIndex,{
                     ...this.data.items[newIndex],
@@ -49,7 +53,6 @@
         }
     }
 </script>
-
 <style scoped lang="less">
     .mid-page-container{
         position: absolute;
@@ -61,16 +64,15 @@
             width: 100%;
             height: 100%;
             .page-list{
-                height: 100%;
-            }
-            .ghost{
                 background: #fff;
-                border: 1px dashed #409EFF;
+                border: 1px dashed #999;
+                min-height: 600px;
 
-                &::after{
-                    background: #fff;
-                }
+
+
             }
+
         }
     }
+
 </style>
