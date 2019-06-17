@@ -10,7 +10,7 @@
 
             >
                 <template v-for="(it,index) in data.items">
-                    <pageItem v-if="it" :key="it.key" :element="it" :select.sync="curSelect"></pageItem>
+                    <pageItem v-if="it" :key="it.key" :element="it" :index="index" :data="data" :select.sync="curSelect"></pageItem>
                 </template>
             </draggable>
         </div>
@@ -45,6 +45,7 @@
                     key,
                 })
                 console.log(this.data)
+                this.curSelect = this.data.items[newIndex];
             }
         },
         components:{

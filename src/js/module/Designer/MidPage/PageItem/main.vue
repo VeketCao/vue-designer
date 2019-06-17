@@ -1,5 +1,10 @@
 <template>
-    <div class="page-item-view">
+    <div class="page-item-view "
+         v-if="element && element.key"
+         :class="{active:curSelect.key==element.key}"
+         @click="handleClick(index)"
+
+    >
         <component :is="element.type"></component>
     </div>
 </template>
@@ -7,7 +12,31 @@
 <script>
     export default {
         name: "PageItem",
-        props:['element','select']
+        props:['element','select','index','data'],
+        data(){
+            return{
+                curSelect:this.select,
+            }
+        },
+        methods:{
+            handleClick(){
+
+                this.curSelect = this.data.items[this.index];
+                console.log('select',this.curSelect)
+            }
+        },
+        watch: {
+            select (val) {
+                this.curSelect = val
+            },
+            curSelect: {
+                handler (val) {
+                    this.$emit('update:select', val)
+                },
+                deep: true
+            }
+        }
+
     }
 </script>
 
