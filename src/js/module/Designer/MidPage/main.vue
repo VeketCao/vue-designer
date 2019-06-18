@@ -51,6 +51,17 @@
         components:{
             Draggable,
             PageItem,
+        },
+        watch: {
+            select (val) {
+                this.curSelect = val
+            },
+            curSelect: {
+                handler (val) {
+                    this.$emit('update:select', val)
+                },
+                deep: true
+            }
         }
     }
 </script>
@@ -64,13 +75,12 @@
         .page{
             width: 100%;
             height: 100%;
+            border: 1px dashed #999;
+            overflow-y: auto;
             .page-list{
                 background: #fff;
-                border: 1px dashed #999;
-                min-height: 600px;
-
-
-
+                width: 100%;
+                height: 100%;
             }
 
         }

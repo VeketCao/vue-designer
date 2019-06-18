@@ -6,6 +6,12 @@
 
     >
         <component :is="element.type"></component>
+
+        <div class="tool-bar">
+            <div class="right-btn">
+                <a @click="deleteHandle(index)"><i class="fa fa-trash-o"></i></a>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -23,6 +29,21 @@
 
                 this.curSelect = this.data.items[this.index];
                 console.log('select',this.curSelect)
+            },
+            deleteHandle(index){
+                if (this.data.items.length - 1 === index) {
+                    if (index === 0) {
+                        this.curSelect = {}
+                    } else {
+                        this.curSelect = this.data.items[index - 1]
+                    }
+                } else {
+                    this.curSelect = this.data.items[index + 1]
+                }
+
+                this.$nextTick(() => {
+                    this.data.items.splice(index, 1)
+                })
             }
         },
         watch: {
@@ -46,7 +67,7 @@
         position: relative;
         border: 1px dashed #999;
         background-color: rgba(236,245,255,.3);
-        margin: 2px 2px;
+        margin: 1px 1px;
         &:after{
             position: absolute;
             left: 0;
@@ -66,12 +87,36 @@
             //border-left: 1px solid #409EFF;
             background: #b3d8ff;
         }
-
+        .tool-bar{
+            display: none;
+        }
     }
     .ghost{
-        background-color: red;
+        list-style: none;
+        font-size: 0;
+        display: block;
+        position: relative;
+        border: 2px solid red!important;
+        background-color: red!important;
         width: 100%;
-        padding-bottom: 2px;
-        height: 2px;
+        padding-bottom: 1px;
     }
+    .active{
+        border:3px solid #409eff;
+        background-color: #b2d8ff;
+        .tool-bar{
+            display: block;
+            position: absolute;
+            width: 100%;
+            .right-btn{
+                position: relative;
+                float: right;
+                a{
+                    padding: 3px 3px;
+                    cursor:pointer;
+                }
+            }
+        }
+    }
+
 </style>

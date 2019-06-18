@@ -3,14 +3,20 @@
         <span class="title">Vue组件页面设计器</span>
         <div class="tool-btn pull-right">
             <a class="btn btn-blue" id="preview_btn">预览</a>
-            <a class="btn btn-white" id="save_btn">保存</a>
+            <a class="btn btn-white" id="save_btn" @click="saveHandle">保存</a>
         </div>
     </header>
 </template>
 
 <script>
     export default {
-        name: "HeaderBar"
+        name: "HeaderBar",
+        props:['data'],
+        methods:{
+            saveHandle(){
+                alert(JSON.stringify(this.data))
+            }
+        }
     }
 </script>
 
