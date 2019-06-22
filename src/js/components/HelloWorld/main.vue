@@ -1,12 +1,12 @@
 <template>
-    <div class="text-input">
-        <span>这是实例化后单文本行组件</span><br>
+    <div >
+        <h1>Hello,{{title||'World!'}}</h1><br>
     </div>
 </template>
 
 <script>
     export default {
-        name: "TextInput",
+        name: "HelloWorld",
         props:['title'],
         data(){
             return{
@@ -17,7 +17,5 @@
 </script>
 
 <style scoped lang="less">
-.text-input{
 
-}
 </style>

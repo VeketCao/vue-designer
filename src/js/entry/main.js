@@ -10,6 +10,8 @@ Vue.use(ElementUI);*/
 
 import '../components/main'//注册组件
 
+window.Bus = new Vue();
+
 new Vue({
     el:'#app',
     router,

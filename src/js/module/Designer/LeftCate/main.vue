@@ -1,6 +1,7 @@
 <template>
     <div class="left-cate">
         <div class="cate-list">
+
             <div class="title">基础组件</div>
             <draggable tag='ul'
                        :list="basicComponents"
@@ -13,6 +14,20 @@
                     <a><span>{{item.name}}</span></a>
                 </li>
             </draggable>
+
+            <div class="title">布局组件</div>
+            <draggable tag='ul'
+                       :list="layoutList"
+                       v-bind="{group:{ name:'g', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
+                       @start="handledragStart"
+                       @end="handledragEnd"
+                       :move="allowMove"
+            >
+                <li class="cate-item" v-for="(item,index) in layoutList" :key="index" :type="item.type">
+                    <a><span>{{item.name}}</span></a>
+                </li>
+            </draggable>
+
         </div>
     </div>
 </template>
@@ -25,21 +40,20 @@
         name: "LeftCate",
         data(){
             return{
-                basicComponents:api.getBasicComponents()
+                basicComponents:api.getBasicComponents(),
+                layoutList:api.getLayoutList()
             }
         },
         methods:{
             // 组件类型拖拽
             handledragStart({oldIndex}) {
                 console.log('start', oldIndex)
-                //const {target, dataTransfer} = ev;
-               //dataTransfer.setData('text', target.component);
-                //target.classList.add('moving');
             },
             handledragEnd(e) {
                 console.log('end', e)
                 //const {target} = ev;
                 //target.classList.remove('moving')
+                Bus.$emit('dragCateEnd',e)
             },
             allowMove(){
                 return true
@@ -58,12 +72,12 @@
         bottom: 0;
         left: 0;
         width: 250px;
-        box-sizing: border-box;
         background-color: #fff;
         .cate-list{
-            padding: 8px 0;
+            padding: 5px 0px;
             width: 100%;
             height: 100%;
+            position: relative;
             .title{
                 font-size: 14px;
                 line-height: 20px;
@@ -71,25 +85,24 @@
             ul{
                 position: relative;
                 overflow: hidden;
-                padding: 5px 10px ;
+                padding: 0px 10px 10px;
                 margin: 0;
             }
             .cate-item{
                 position: relative;
-                width: 70px;
-                margin: 5px 10px;
-                padding: 5px 10px;
+                width: 48%;
+                margin: 1%;
+                line-height: 26px;
                 border: 1px solid #f4f6fc;
                 border-radius: 2px;
                 background-color: #f4f6fc;
                 cursor: move;
-                -webkit-transition: background ease-in-out 0.15s;
-                -moz-transition: background ease-in-out 0.15s;
                 transition: background ease-in-out 0.15s;
                 float:left;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 color: #333;
+                font-size: 12px;
                 &:hover{
                     color: #409EFF;
                     border: 1px dashed #409EFF;
@@ -104,6 +117,7 @@
                     span{
                         display: inline-block;
                         vertical-align: middle;
+                        padding-left: 18px;
                     }
                 }
 

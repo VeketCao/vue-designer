@@ -37,7 +37,7 @@
                         title:'标题'
                     }
                 },
-                curSelect:null,
+                curSelect:{},
                 tabName:'item'
             }
         },

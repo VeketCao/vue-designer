@@ -2,7 +2,7 @@
     <div class="page-item-view "
          v-if="element && element.key"
          :class="{active:curSelect.key==element.key}"
-         @click="handleClick(index)"
+         @click.stop="handleClick(index)"
 
     >
         <component :is="element.type"></component>
@@ -62,12 +62,40 @@
 </script>
 
 <style scoped lang="less">
-    .page-item-view{
-        padding-bottom: 18px;
+    .page-item-view{;
         position: relative;
         border: 1px dashed #999;
         background-color: rgba(236,245,255,.3);
-        margin: 1px 1px;
+        min-height: 50px;
+        &.ghost{
+            list-style: none;
+            font-size: 0;
+            display: block;
+            position: relative;
+            border: 2px solid red!important;
+            width: 100%;
+            min-height: 1px!important;
+        }
+        &.active{
+            border: 2px solid #409eff;
+            background-color: #b3d8ff;
+            .tool-bar{
+                display: block;
+                position: absolute;
+                width: 20px;
+                right: 0;
+                bottom: 0;
+                .right-btn{
+                    position: relative;
+                    float: right;
+                    background-color: #409eff;
+                    a{
+                        padding: 0px 5px;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
         &:after{
             position: absolute;
             left: 0;
@@ -89,33 +117,6 @@
         }
         .tool-bar{
             display: none;
-        }
-    }
-    .ghost{
-        list-style: none;
-        font-size: 0;
-        display: block;
-        position: relative;
-        border: 2px solid red!important;
-        background-color: red!important;
-        width: 100%;
-        padding-bottom: 1px;
-    }
-    .active{
-        border:3px solid #409eff;
-        background-color: #b2d8ff;
-        .tool-bar{
-            display: block;
-            position: absolute;
-            width: 100%;
-            .right-btn{
-                position: relative;
-                float: right;
-                a{
-                    padding: 3px 3px;
-                    cursor:pointer;
-                }
-            }
         }
     }
 

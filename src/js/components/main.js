@@ -1,5 +1,5 @@
-import ColumnPanel from './ColumnPanel/main'
+import HelloWorld from './HelloWorld/main'
 import TextInput from './TextInput/main'
 
-Vue.component('ColumnPanel',ColumnPanel);
+Vue.component('HelloWorld',HelloWorld);
 Vue.component('TextInput',TextInput);

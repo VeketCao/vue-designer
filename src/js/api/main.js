@@ -8,10 +8,10 @@ export default {
 
         return [
             {
-                type:'ColumnPanel',
-                name:'布局组件',
+                type:'HelloWorld',
+                name:'测试组件',
                 opts:{
-                    col:2
+                    title:''
                 }
             },
             {
@@ -24,6 +24,41 @@ export default {
                     required:false,
                     placeholder:''
                 }
+            }
+        ]
+    },
+    /**
+     * 布局组件列表
+     * @returns {*[]}
+     */
+    getLayoutList(){
+        return[
+            {
+                type:'ColumnLayout',
+                name:'两列布局',
+                cols:[
+                    {items:[],opts:{}},
+                    {items:[],opts:{}}
+                ]
+            },
+            {
+                type:'ColumnLayout',
+                name:'三列布局',
+                cols:[
+                    {items:[],opts:{}},
+                    {items:[],opts:{}},
+                    {items:[],opts:{}}
+                ]
+            },
+            {
+                type:'ColumnLayout',
+                name:'四列布局',
+                cols:[
+                    {items:[],opts:{}},
+                    {items:[],opts:{}},
+                    {items:[],opts:{}},
+                    {items:[],opts:{}}
+                ]
             }
         ]
     }
